@@ -10,6 +10,7 @@ if(!$sel)
    die("failed to select:".mysql_error());
 
 	$empid=$_POST['empid'];
+	echo $empid;
 	if ($empid==NULL)
 	{
 		$res = "Please Fill out the Field.";

@@ -9,9 +9,29 @@ $sel = mysql_select_db('kpit',$conn);
 if(!$sel)
    die("failed to select:".mysql_error());
    
-   $id = $_POST['id'];
-   
-    	$entry=mysql_query("SELECT * FROM personnel WHERE EMP_ID=$id");
+   $emp_id = $_POST['id'];
+
+      $id = NULL;
+      $cnic = NULL;
+      $nomenclature = NULL;
+      $fullname  = NULL;
+      $service_status = NULL;
+      $fathername = NULL;
+      $gender = NULL;
+      $dob = NULL;
+      $domicile = NULL;
+      $cadre = NULL;
+      $place_cp = NULL;
+      $date_cp = NULL;
+      $status = NULL;
+      $bps = NULL;
+      $remarks = NULL;
+      $mistake = NULL;
+      $personal_no = NULL;
+      $facilityname = NULL;
+if($emp_id != NULL)
+{
+    	$entry=mysql_query("SELECT * FROM personnel WHERE EMP_ID=$emp_id");
 		if(!$entry)
 		 $res="Failed to display the Database.";
 		while($row=mysql_fetch_array($entry))
@@ -36,7 +56,7 @@ if(!$sel)
 			$facilityname = $row['FacilityName'];
 		}
 
-		
+		}
 	mysql_close($conn);
 ?>
 
@@ -69,6 +89,32 @@ if(!$sel)
 
 <!-- End CSS Link -->
 <script type="text/javascript" src="..\assets/js/jquery.js"></script>
+<script>
+$(document).ready(function(){
+
+    $('#btnyes').click(function (e) {
+     e.preventDefault();
+      $.post("delete.php", $('#deleteform').serialize(),function(res){
+       $('#adelete').text(res);
+      });
+     return false;
+    });
+  })
+</script>
+<script>
+
+$(document).ready(function(){
+
+    $('#update').click(function (e) {
+      e.preventDefault();
+      $.post("update.php", $("#formupdate").serialize(),function(response){
+         $('#aupdate').text(response);
+      });
+     return false;
+    });
+    
+  })
+</script>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -130,7 +176,11 @@ if(!$sel)
 					<div class="single-wrapper clearfix">
 				   	<br><br>
                       <h2>DATABASE<h2>
-                      	
+                        <div class="form-bt">
+                      	   <button class="btn btn-main ctr" data-toggle="modal" data-target="#editModal" style="width:180px">EDIT</button>
+                           <button class="btn btn-inverse ctr" type="submit" data-toggle="modal" data-target="#deleteModal"
+                            style="width:180px">DELETE</button>
+                        </div>
                      <table class="table table-bordered">
                      	<tr>
                      		<td>
@@ -283,7 +333,73 @@ if(!$sel)
 		</div>
 	</div>
 		<!--Home content end-->
-	</div>	    
+	</div>
+<!-- Edit Modal start -->
+         <div class="modal hide fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                 <h4 class="modal-title" id="myModalLabel">Edit Database</h4>
+               </div>
+               <div class="modal-body"  style="text-align:center">
+                   <form class="list-form" action="update.php" method="post" id="formupdate" > 
+                     <a href="#" id="aupdate" style="font-size:18px;text-align:center"></a>
+                     <br>
+                     <input value="<?php echo $id; ?>" type="hidden" name="empid"  required>
+                     <p style="font-size:18px;text-align:center">EMP_ID:<?php echo $id; ?></p>
+                     <select name="fieldname" required>
+                          <option value=""></option>
+                          <option value="CNIC_No">CNIC_NO</option>
+                          <option value="Nomenclature">Nomenclature</option>
+                          <option value="FullName">FullName</option>
+                          <option value="Service_status">Service_status</option>
+                          <option value="FatherName">FatherName</option>
+                          <option value="Gender">Gender</option>
+                          <option value="DOB">DOB</option>
+                          <option value="Domicile">Domicile</option>
+                          <option value="PlaceofCurrentPosting">PlaceofCurrentPosting</option>
+                          <option value="DateofCurrentPosting">DateofCurentPosting</option>
+                          <option value="Status">Status</option>
+                          <option value="BPS">BPS</option>
+                          <option value="Remarks">Remarks</option>
+                          <option value="mistake">mistake</option>
+                          <option value="Personal_No">Personal_No</option>
+                          <option value="FacilityName">FacilityName</option>
+                     </select>
+                            
+                     <input  type="text" name="fieldvalue" placeholder="Enter the Field Value" required>
+                     <button type="submit" id="update" style="width:180px" class="btn btn-main">UPDATE</button>
+                  </form>
+                  <button type="button" class="btn btn-inverse btn-md" style="text-align:center;width:100px" data-dismiss="modal">Cancel</button>
+               </div>
+             </div>
+           </div>
+         </div>
+<!-- Edit Modal end -->
+
+
+      <!-- Delete Modal start -->
+         <div class="modal hide fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+           <div class="modal-dialog">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                 <h4 class="modal-title" id="myModalLabel">Delete Entry</h4>
+               </div>
+               <div class="modal-body"  style="text-align:center">
+                   <form class="list-form" role="form" action="delete.php" id="deleteform">
+                     <a href="#" id="adelete"></a>
+                      <p style="font-size:18px">Are you Sure you want to delete this record.</p> 
+                     <input type="hidden" name="empid" value="<?php echo $id; ?>" >
+                     <button type="submit" id="btnyes" class="btn btn-main btn-md" style="text-align:center;width:100px">Yes</button>
+                  </form>
+                   <button type="button" class="btn btn-inverse btn-md" style="text-align:center;width:100px" data-dismiss="modal">NO</button>      
+               </div>
+             </div>
+           </div>
+         </div>
+<!-- Delete Modal end -->    
 
 	<section>
 		<br><br><br><br>
