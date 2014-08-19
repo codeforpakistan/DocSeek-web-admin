@@ -1,3 +1,10 @@
+<?php
+$admin=NULL;
+if(isset($_POST['admin']))
+{
+	$admin= $_POST['admin'];
+}
+?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -25,12 +32,12 @@
 
 $(document).ready(function(){
 
-    $('#newentry').click(function (e) {
+    $('#update').click(function (e) {
       e.preventDefault();
-      $.post("php/new_entry.php", $("#formnew").serialize(),function(response){
-      	$('#anewentry').text(response);
+      $.post("php/update.php", $("#formupdate").serialize(),function(response){
+      	$('#aupdate').text(response);
       	$('#reset').click(function (e){
-         window.location.href="New_Entry.html";
+         $('#aupdate').html(null);
       	});
       });
      return false;
@@ -65,16 +72,15 @@ $(document).ready(function(){
 						<span class="icon-bar"></span>
 						</a>
 						<ul class="nav nav-collapse collapse">
-							<li><a href="index.html">DocSeek</a>
-                            </li>
+							<li><a><?php echo $admin;?></a></li>
 							<li>
 							<div class="home-logo">
 								<div>
-									<a href="index.html"><img src="assets/img/docseek_logo.png" alt="logo"></a>
+									<a href="index.php"><img src="assets/img/docseek_logo.png" alt="logo"></a>
 								</div>
 							</div>
 							</li>
-							<li><a href="contact.html">contact</a></li>
+							<li><a href="logout.php">log out</a></li>
 						</ul>
 					</div>
 				</div>
@@ -91,33 +97,43 @@ $(document).ready(function(){
 				<div class="span1"></div>
 				<div class="span10">
 					<div class="heading-area">
-						<h2>New Entry</h2>
+						<h2>Update Database</h2>
+						<form action="index.php" method="post">
+						   <input type='hidden' name='back' value='<?php echo $admin;?>'>
+						    <button class="pull-right btn btn-main" style="font-size:18px" type="submit">BACK</button>
+						    <br>
+						</form>
 					</div>
 					<div class="single-wrapper clearfix " style="text-align:center">
-						<form class="list-form" action="php/new_entry.php" method="post" id="formnew" > 
-							<a href="#" id="anewentry" class="span7"style="font-size:18px;text-align:center"></a>
+						<form class="list-form" action="php/update.php" method="post" id="formupdate" > 
+							<a href="#" id="aupdate" class="span7"style="font-size:18px;text-align:center"></a>
 							<br>
                             <input class="span7" type="text" name="empid" placeholder="EMP_ID" required>
-                            <input class="span7" type="text" name="cnic_no" placeholder="CNIC_NO" required>
-                            <input class="span7" type="text" name="Nomenclature" placeholder="Nomenclature" required>
-                            <input class="span7" type="text" name="FullName" placeholder="FullName" required>
-                            <input class="span7" type="text" name="Service_status" placeholder="Service_status" required>
-                            <input class="span7" type="text" name="FatherName" placeholder="FatherName" required>
-                            <input class="span7" type="text" name="Gender" placeholder="Gender" required>
-                            <input class="span7" type="text" name="DOB" placeholder="DOB" required>
-                            <input class="span7" type="text" name="Domicile" placeholder="Domicile" required>
-                            <input class="span7" type="text" name="Cadre" placeholder="Cadre" required>
-                            <input class="span7" type="text" name="PlaceofCurrentPosting" placeholder="PlaceofCurrentPosting" required>
-                            <input class="span7" type="text" name="DateofCurrentPosting" placeholder="DateofCurrentPosting" required>
-                            <input class="span7" type="text" name="Status" placeholder="Status" required>
-                            <input class="span7" type="text" name="BPS" placeholder="BPS" required>
-                            <input class="span7" type="text" name="Remarks" placeholder="Remarks" required>
-                            <input class="span7" type="text" name="mistake" placeholder="mistake" required>
-                            <input class="span7" type="text" name="Personal_No" placeholder="Personal_No" required>
-                            <input class="span7" type="text" name="FacilityName" placeholder="FacilityName" required>
-
+                             
+                            <p style="font-size:18px;text-align:center">Select the specific field.</p>
+                            <select class="span7" name="fieldname" required>
+							     <option value=""></option>
+		                         <option value="CNIC_No">CNIC_NO</option>
+		                         <option value="Nomenclature">Nomenclature</option>
+		                         <option value="FullName">FullName</option>
+		                         <option value="Service_status">Service_status</option>
+		                         <option value="FatherName">FatherName</option>
+		                         <option value="Gender">Gender</option>
+		                         <option value="DOB">DOB</option>
+		                         <option value="Domicile">Domicile</option>
+		                         <option value="PlaceofCurrentPosting">PlaceofCurrentPosting</option>
+		                         <option value="DateofCurrentPosting">DateofCurentPosting</option>
+		                         <option value="Status">Status</option>
+		                         <option value="BPS">BPS</option>
+		                         <option value="Remarks">Remarks</option>
+		                         <option value="mistake">mistake</option>
+		                         <option value="Personal_No">Personal_No</option>
+		                         <option value="FacilityName">FacilityName</option>
+                            </select>
+                            
+                            <input class="span7" type="text" name="fieldvalue" placeholder="Enter the Field Value" required>
                             <button type="reset" id="reset" style="width:180px" class="btn btn-main">RESET</button>
-							<button type="submit" id="newentry" style="width:180px" class="btn btn-main">New Entry</button>
+							<button type="submit" id="update" style="width:180px" class="btn btn-main">UPDATE</button>
 
 						</form>
 					</div>
@@ -167,6 +183,7 @@ $(document).ready(function(){
 <script src="assets/js/jquery.mCustomScrollbar.js"></script>
 <script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
 <script src="assets/js/jquery.panorama.js"></script>
+<script type="text/javascript" src="assets/js/url_parser.js"></script>
 <script>$('#widget').draggable();</script>
 <!-- End JS Link -->
 

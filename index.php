@@ -1,3 +1,22 @@
+<?php
+session_start();
+if(!isset($_SESSION['admin']))
+{
+	if($_POST['back']==NULL)
+	{
+		$admin= NULL;
+		header('location:admin.php');
+	}
+	else{
+		$admin= $_POST['back'];
+	}
+}
+else{
+	$admin= $_SESSION['admin'];
+}
+
+session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -35,7 +54,7 @@ $(document).ready(function(){
       $.post("php/delete.php", $('#deleteform').serialize(),function(res){
        $('#adelete').text(res);
        $('#btnreset').click(function (e){
-       	window.location.href="index.html";
+       	$('#adelete').html(null);
        });
        
       });
@@ -65,7 +84,7 @@ $(document).ready(function(){
 				<div class="top-menu navbar">
 					<div class="navbar-inner">
 						<div class="moblogo visible-phone visible-tablet">
-							<a href="index.html"><img src="assets/img/docseek_logo.png" alt="logo"></a>
+							<a href="#"><img src="assets/img/docseek_logo.png" alt="logo"></a>
 						</div>
 						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
@@ -73,18 +92,16 @@ $(document).ready(function(){
 						<span class="icon-bar"></span>
 						</a>
 						<ul class="nav nav-collapse collapse">
-							<li><a href="index.html">DocSeek</a>
+							<li><a href="#" ><?php echo $admin;?></a>
                             </li>
-							
-							<li>
+                            <li>
 							<div class="home-logo">
 								<div>
-									<a href="index.html"><img src="assets/img/docseek_logo.png" alt="logo"></a>
+									<a href="#"><img src="assets/img/docseek_logo.png" alt="logo"></a>
 								</div>
 							</div>
 							</li>
-							<li><a href="contact.html">contact</a></li>
-							
+							<li><a href="logout.php">log out</a></li>
 						</ul>
 					</div>
 				</div>
@@ -102,36 +119,58 @@ $(document).ready(function(){
 	<div class="container">
 		<div id="home-content">
 			<div class="row">
-				<div class="span1">
-				</div>
+				<div class="span1"></div>
 				<div class="span10" style="text-align:center">
 				   <div class="single-wrapper clearfix">
 				   	<br><br>
                       <h2>Database Handler<h2>
                       	<form action="php/database.php" method="POST">
                       	<div class="span3">
-                      		<button class='btn btn-main ' name="submit" type='submit' style='width:180px;text-align:center'>VIEW</button>
-							<br>	
+                      		<button class='btn btn-main ' name="submit" type='submit' style='width:180px;text-align:center;font-size:18px'><i class="icon-file" style="font-size:20px;margin-right:10px"></i>VIEW</button>
+							<br>
+							<input type='hidden' name='admin' value='<?php echo $admin;?>'>	
                       	</div>
                       </form>
                       
                         <div class="span3">
-                      		<button class='btn btn-main ' type='submit' style='width:180px;text-align:center' data-toggle="modal" data-target="#editModal">EDIT</button>
+                      		<button class='btn btn-main ' type='submit' style='width:180px;text-align:center;font-size:18px' data-toggle="modal" data-target="#editModal"><i class="icon-edit" style="font-size:20px;margin-right:10px"></i>EDIT</button>
 							<br>	
                       	</div>
                       
                       
                       	<div class="span3">
-                      		<button class='btn btn-inverse' type='submit' style='width:180px;text-align:center' data-toggle="modal" data-target="#deleteModal">DELETE</button>
+                      		<button class='btn btn-inverse' type='submit' style='width:180px;text-align:center;font-size:18px' data-toggle="modal" data-target="#deleteModal"><i class="icon-remove-circle" style="font-size:20px;margin-right:10px"></i>DELETE</button>
 							<br>	
                       	</div>
                       
                       	<br><br>
 				   </div>
-				   <div class="span1">
-				   </div>
+				   
 			   </div>
-			</div>
+		</div>
+		<div class="row">
+			<div class="span1"></div>
+			   <div class="span6 single-wrapper clearfix">
+                   <h3>Search a Doctor</h3>
+                <form style="text-align:center" action="php/doc_search.php" method="post">
+					<input type="text" class="span5"  name="alpha" placeholder="e.g. Cardiologist" required>
+					<input type="hidden" name="admin" value="<?php echo $admin;?>">
+					<div class="search-button">
+						<button class=" btn btn-main ctr" style="margin:0 auto; width:140px;">Doctors</button>
+					</div>
+				</form>
+			   </div>
+			   <div class="span3 cont-sp single-wrapper clearfix">
+					<h3>Contact Us</h3>
+					<p>
+						Email the DocSeek team <br>
+						to share your experience <br>
+						 with the WebApp.
+					</p>
+					<p class="email">
+						Email:<a href="mailto:hina@labandroid.com">hina@labandroid.com</a>
+					</p>		
+				</div>
 		</div>
 	</div>
 		<!--Home content end-->
@@ -149,9 +188,10 @@ $(document).ready(function(){
 			      	 <table class="table">
 			          <tr>
 			            <td style="border:none">
-			        <form class="form-horizontal" role="form" style="text-align:center" action="Update.html">
+			        <form class="form-horizontal" role="form" style="text-align:center" action="Update.php" method="post">
 			        	<p style="font-size:18px">Update the existing records.</p>
-			      <button type="submit" class="btn btn-main btn-md" style="width:180px">UPDATE</button>
+			        	<input type='hidden' name='admin' value='<?php echo $admin;?>'>
+			      <button type="submit" class="btn btn-main btn-md" style="width:180px"><i class="icon-edit" style="margin-right:10px"></i>UPDATE</button>
 		         
 			    </form>
 			  </td></tr>
@@ -161,9 +201,10 @@ $(document).ready(function(){
 			  		</td></tr>
 			  <tr>
 			    <td style="border:none">
-			     <form class="form-horizontal" role="form" style="text-align:center" action="New_Entry.html">
+			     <form class="form-horizontal" role="form" style="text-align:center" action="New_Entry.php" method="post">
 			     	<p style="font-size:18px">Make a record for a new entry.</p>
-			      <button type="submit" class="btn btn-inverse btn-md" style="width:180px">NEW ENTRY</button>
+			     	<input type='hidden' name='admin' value='<?php echo $admin;?>'>
+			      <button type="submit" class="btn btn-inverse btn-md" style="width:180px"><i class="icon-edit" style="margin-right:10px"></i>NEW ENTRY</button>
 			    </form>
 			    </td></tr>
 			    </table>
@@ -189,7 +230,7 @@ $(document).ready(function(){
 			      	    <p style="font-size:18px">Delete an existing record.</p> 
 						   <input class="span5" type="text" name="empid" required placeholder="EMP_ID">
 						   <button type="reset" id="btnreset" class="btn btn-main btn-md" style="text-align:center;width:180px">Reset</button>
-                        <button type="submit" id="btndelete" class="btn btn-inverse btn-md" style="text-align:center;width:180px">Delete</button>
+                        <button type="submit" id="btndelete" class="btn btn-inverse btn-md" style="text-align:center;width:180px"><i class="icon-remove-circle" style="margin-right:10px"></i>Delete</button>
 			         </form>
 		
 			      </div>
@@ -200,7 +241,6 @@ $(document).ready(function(){
 	<section>
 		<br><br><br><br>
 		<br><br><br><br>
-		<br><br><br>
 	</section>
 	<!--Footer   area   start-->
 	<div class="footer-wrapper clearfix">
@@ -214,6 +254,7 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
+
 	<!--Footer   area   End-->
 
 	
@@ -236,7 +277,9 @@ $(document).ready(function(){
 	<script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="assets/js/jquery.panorama.js"></script>
 	<script type="text/javascript" src="assets/js/retina.js"></script>
+	<script type="text/javascript" src="assets/js/url_parser.js"></script>
 	<script>$('#widget').draggable();</script>
+
 	<!-- End JS Link -->
 	</body>
 	</html>

@@ -1,3 +1,15 @@
+<?php
+session_start();
+if(isset($_SESSION['adminresponse']))
+{
+    $reply=$_SESSION['adminresponse'];
+} 
+else
+{
+	$reply=NULL;
+}
+session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -21,23 +33,7 @@
 <link rel="stylesheet" href="assets/css/toggles.css" type="text/css" media="screen"/>
 <!-- End CSS Link -->
 <script type="text/javascript" src="assets/js/jquery.js"></script>
-<script>
 
-$(document).ready(function(){
-
-    $('#update').click(function (e) {
-      e.preventDefault();
-      $.post("php/update.php", $("#formupdate").serialize(),function(response){
-      	$('#aupdate').text(response);
-      	$('#reset').click(function (e){
-         window.location.href="update.html";
-      	});
-      });
-     return false;
-    });
-    
-  })
-</script>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -65,16 +61,13 @@ $(document).ready(function(){
 						<span class="icon-bar"></span>
 						</a>
 						<ul class="nav nav-collapse collapse">
-							<li><a href="index.html">DocSeek</a>
-                            </li>
 							<li>
 							<div class="home-logo">
 								<div>
-									<a href="index.html"><img src="assets/img/docseek_logo.png" alt="logo"></a>
+									<a href="#"><img src="assets/img/docseek_logo.png" alt="logo"></a>
 								</div>
 							</div>
 							</li>
-							<li><a href="contact.html">contact</a></li>
 						</ul>
 					</div>
 				</div>
@@ -91,40 +84,22 @@ $(document).ready(function(){
 				<div class="span1"></div>
 				<div class="span10">
 					<div class="heading-area">
-						<h2>Update Database</h2>
+						<h2>Admin Panel</h2>
 					</div>
 					<div class="single-wrapper clearfix " style="text-align:center">
-						<form class="list-form" action="php/update.php" method="post" id="formupdate" > 
-							<a href="#" id="aupdate" class="span7"style="font-size:18px;text-align:center"></a>
-							<br>
-                            <input class="span7" type="text" name="empid" placeholder="EMP_ID" required>
-                             
-                            <p style="font-size:18px;text-align:center">Select the specific field.</p>
-                            <select class="span7" name="fieldname" required>
-							     <option value=""></option>
-		                         <option value="CNIC_No">CNIC_NO</option>
-		                         <option value="Nomenclature">Nomenclature</option>
-		                         <option value="FullName">FullName</option>
-		                         <option value="Service_status">Service_status</option>
-		                         <option value="FatherName">FatherName</option>
-		                         <option value="Gender">Gender</option>
-		                         <option value="DOB">DOB</option>
-		                         <option value="Domicile">Domicile</option>
-		                         <option value="PlaceofCurrentPosting">PlaceofCurrentPosting</option>
-		                         <option value="DateofCurrentPosting">DateofCurentPosting</option>
-		                         <option value="Status">Status</option>
-		                         <option value="BPS">BPS</option>
-		                         <option value="Remarks">Remarks</option>
-		                         <option value="mistake">mistake</option>
-		                         <option value="Personal_No">Personal_No</option>
-		                         <option value="FacilityName">FacilityName</option>
-                            </select>
-                            
-                            <input class="span7" type="text" name="fieldvalue" placeholder="Enter the Field Value" required>
-                            <button type="reset" id="reset" style="width:180px" class="btn btn-main">RESET</button>
-							<button type="submit" id="update" style="width:180px" class="btn btn-main">UPDATE</button>
-
+						<form class="horizontal-form" action="php/admin.php" method="post" id="admin"> 
+							<label class="span7" style="font-size:20px">Please log in to operate further.</label>
+							<br><br>
+							<p style="font-size:18px;text-align:center"><?php echo $reply;?></p>
+                            <input class="span7" type="text" name="name" placeholder="Username" required>
+                            <input class="span7" type="password" name="pass" placeholder="Password" required><br>
+                            <a data-toggle="modal" href="#myModal" class="pull-left"style="padding-left:125px;font-size:15px">Change Password</a><br>
+							<button type="submit" id="login" style="width:180px;text-align:center" class="btn btn-main">LOG IN</button>    
 						</form>
+						<p style="font-size:20px;text-align:center">OR</p>
+						<form class="horizontal-form" action="account.php">
+						<button style="width:180px;text-align:center;" class="btn btn-inverse" target="account.html">CREATE ACCOUNT</button>
+					</form>
 					</div>
 				</div>
 
@@ -138,7 +113,30 @@ $(document).ready(function(){
 	<br>
 	<br>
 	<br><br><br><br><br>
+	<br></br></br>
 	</section>
+		<!-- change password Modal start -->
+			<div class="modal hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+			      </div>
+			      <div class="modal-body"  style="text-align:center">
+			      	 <form class="list-form" role="form" action="php/change_password.php" method="post">
+			      	 	<input class="span5" type="text" name="name" required placeholder="Name">
+			      	 	<input class="span5" type="text" name="email" required placeholder="Email ID">
+						<input class="span5" type="password" name="pass_C" required placeholder="Current password">
+						<input class="span5" type="password" name="pass_N" required placeholder="New password">
+                        <button type="submit" class="btn btn-main btn-md" style="text-align:center;width:180px">Change</button>
+			         </form>
+		
+			      </div>
+			    </div>
+			  </div>
+			</div>
+<!--  Modal end -->
 <!--Footer   area   start-->
 <div class="footer-wrapper clearfix">
 	<div class="container">

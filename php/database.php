@@ -8,7 +8,7 @@ if(!$conn)
 $sel = mysql_select_db('kpit',$conn);
 if(!$sel)
    die("failed to select:".mysql_error());
-   
+   $admin= $_POST['admin'];
    if(isset($_POST['submit']))
     {
     	$entry=mysql_query("SELECT * FROM personnel");
@@ -89,7 +89,7 @@ if(!$sel)
 				<div class="top-menu navbar">
 					<div class="navbar-inner">
 						<div class="moblogo visible-phone visible-tablet">
-							<a href="index.html"><img src="..\assets/img/docseek_logo.png" alt="logo"></a>
+							<a href="#"><img src="..\assets/img/docseek_logo.png" alt="logo"></a>
 						</div>
 						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
@@ -97,18 +97,16 @@ if(!$sel)
 						<span class="icon-bar"></span>
 						</a>
 						<ul class="nav nav-collapse collapse">
-							<li><a href="..\index.html">DocSeek</a>
-                            </li>
+                           <li><a href="#"><?php echo $admin;?></a></li>
 							
 							<li>
 							<div class="home-logo">
 								<div>
-									<a href="..\index.html"><img src="..\assets/img/docseek_logo.png" alt="logo"></a>
+									<a href="#"><img src="..\assets/img/docseek_logo.png" alt="logo"></a>
 								</div>
 							</div>
 							</li>
-							<li><a href="..\contact.html">contact</a></li>
-							
+							<li><a href="..\logout.php">log out</a></li>
 						</ul>
 					</div>
 				</div>
@@ -130,7 +128,11 @@ if(!$sel)
 					<div class="single-wrapper clearfix">
 				   	<br><br>
                       <h2>DATABASE<h2>
-                      	
+                      	<form action="../index.php" method="post">
+						   <input type='hidden' name='back' value='<?php echo $admin;?>'>
+						    <button class="pull-right btn btn-main" style="font-size:18px" type="submit">BACK</button>
+						    <br>
+						</form>
                      <table class="table table-bordered">
                      	<tr>
                      		<td>
@@ -178,6 +180,7 @@ if(!$sel)
                      		<td>
                      			<form action="view.php" method="POST">
                      				<input type="hidden" name="id" value="<?php echo $id[$i];?>">
+                     				<input type='hidden' name='admin' value='<?php echo $admin;?>'>
                      			<button class="btn btn-inverse" type="submit">View More</button>
                      		</form>
                      		</td>
